@@ -1,0 +1,239 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="card justify-content-center">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="text-md-left">Data Pelanggan</h3>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-success" onclick="aPelanggan();">Tambah</button>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Nama</th>
+                    <th>Alamat</th>
+                    <th>No. Telp</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="listPelanggan">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="pelangganModal" tabindex="-1" aria-labelledby="pelangganModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm justify-content-center">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pelangganModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" class="form-control" id="idP">
+                    <div class="form-group">
+                        <label for="nama">Nama pelanggan</label>
+                        <input type="text" class="form-control" id="nama" placeholder="nama lengkap">
+                    </div>
+                    <div class="form-group">
+                        <label for="alamat">Alamat Pelanggan</label>
+                        <textarea class="form-control" id="alamat" rows="3" placeholder="alamat lengkap"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="telp">No. Telp</label>
+                        <input type="tel" class="form-control" id="telp" placeholder="no hp/telp">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" onclick="sPelanggan();">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            getListPelanggan();
+        });
+
+        function getListPelanggan() {
+            $.ajax({
+                type: 'GET',
+                url: '/Pelanggan/GetListPelanggan/',
+                dataType: 'json',
+                //data: JSON.stringify(data),
+                success: function (result) {
+                    // on success use return data here
+                    console.log(result);
+                    $('#listPelanggan').empty();
+                    var dt = '';
+                    if (result.length == 0) {
+                        dt += '<tr>';
+                        dt += '<td colspan="5" class="text-center">Data Not Found</td>';
+                        td += '</tr>';
+                    } else {
+                        $.each(result, function (idx, val) {
+                            dt += '<tr>';
+                            dt += '<td class="text-center">' + val.Id + '</td>';
+                            dt += '<td>' + val.Nama + '</td>';
+                            dt += '<td>' + val.Alamat + '</td>';
+                            dt += '<td>' + val.Telp + '</td>';
+                            dt += '<td>' + '<button class="btn btn-secondary btn-sm" value="' + val.Id + '" onclick="ePelanggan(this.value);">Edit</button> ' +
+                                '<button class="btn btn-danger btn-sm" value="' + val.Id + '" onclick="dPelanggan(this.value);">Delete</button>' + '</td>';
+                            dt += '</tr>';
+                        });
+                    }
+
+                    $('#listPelanggan').append(dt);
+                },
+                error: function (xhr, type, exception) {
+                    // if ajax fails display error alert
+                    alert("ajax error response type " + type);
+                }
+            });
+        }
+
+        function ePelanggan(idPelanggan) {
+            //alert(id);
+            $.ajax({
+                type: 'GET',
+                url: '/Pelanggan/GetPelangganBy/',
+                dataType: 'json',
+                data: { id: idPelanggan },
+                success: function (result) {
+                    // on success use return data here
+                    $('#pelangganModal').modal('show');
+                    $('#pelangganModalLabel').text('Udah Data Pelanggan');
+                    $('#idP').val(result.Id);
+                    $('#nama').val(result.Nama);
+                    $('#alamat').val(result.Alamat);
+                    $('#telp').val(result.Telp);
+                },
+                error: function (xhr, type, exception) {
+                    // if ajax fails display error alert
+                    alert("ajax error response type " + type);
+                }
+            });
+        }
+
+        function dPelanggan(idPelanggan) {
+            if (confirm("Apakah anda yakin menghapus data ini")) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Pelanggan/DeletePelanggan/',
+                    dataType: 'json',
+                    data: { id: idPelanggan },
+                    success: function (result) {
+                        // on success use return data here
+                        if (result == 0) {
+                            toastr.error("Data Gagal dihapus");
+                        } else {
+                            toastr.success("Data Berhasil Dihapus");
+                        }
+                        getListPelanggan();
+                    },
+                    error: function (xhr, type, exception) {
+                        // if ajax fails display error alert
+                        alert("ajax error response type " + type);
+                    }
+                });
+            }
+            return false
+        }
+
+        function aPelanggan() {
+            hapus();
+            $('#pelangganModal').modal('show');
+            $('#pelangganModalLabel').text('Tambah Data Pelanggan');
+        }
+
+        function sPelanggan() {
+            var chk = check();
+            if (chk == false) {
+
+            } else {
+
+                var formData = new FormData();
+                formData.append('Id', $('#idP').val());
+                formData.append('Nama', $('#nama').val());
+                formData.append('Alamat', $('#alamat').val());
+                formData.append('Telp', $('#telp').val());
+
+                var link = '';
+                if ($('#idP').val() == '' || $('#idP').val() == null) {
+                    link = '/Pelanggan/AddPelanggan/';
+                } else {
+                    link = '/Pelanggan/UpdatePelanggan/';
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: link,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (result) {
+                        // on success use return data here
+                        if (result == 0) {
+                            toastr.error("Data Gagal Disimpan");
+                        } else {
+                            toastr.success("Data Berhasil Disimpan");
+                        }
+                        $('#pelangganModal').modal('hide');
+                        getListPelanggan();
+                    },
+                    error: function (xhr, type, exception) {
+                        // if ajax fails display error alert
+                        alert("ajax error response type " + type);
+                    }
+                });
+            }
+        }
+
+        function hapus() {
+            $('#idP').val('');
+            $('#nama').val('');
+            $('#alamat').val('');
+            $('#telp').val('');
+            $('#pelangganModalLabel').text('');
+        }
+
+        function check() {
+            var nmPl = $('#nama').val();
+            var alPl = $('#alamat').val();
+            var tlPl = $('#telp').val();
+
+            if (nmPl == '' || nmPl == null) {
+                toastr.error('Nama pelanggan tidak boleh kosong');
+                return false;
+            } else if (alPl == '' || alPl == null) {
+                toastr.error('Alamat pelanggan tidak boleh kosong');
+                return false;
+            } else if (tlPl == '' || tlPl == null || isNaN(tlPl) || tlPl.length > 12) {
+                toastr.error('No. Telp tidak boleh kosong ,selain angka, ataupun lebih 12 digit');
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+    </script>
+}
+

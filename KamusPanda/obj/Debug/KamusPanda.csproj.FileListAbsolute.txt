@@ -1,0 +1,7 @@
+D:\Project\Repos\KamusPanda\bin\Debug\KamusPanda.exe.config
+D:\Project\Repos\KamusPanda\bin\Debug\KamusPanda.exe
+D:\Project\Repos\KamusPanda\bin\Debug\KamusPanda.pdb
+D:\Project\Repos\KamusPanda\obj\Debug\KamusPanda.csproj.AssemblyReference.cache
+D:\Project\Repos\KamusPanda\obj\Debug\KamusPanda.csproj.CoreCompileInputs.cache
+D:\Project\Repos\KamusPanda\obj\Debug\KamusPanda.exe
+D:\Project\Repos\KamusPanda\obj\Debug\KamusPanda.pdb

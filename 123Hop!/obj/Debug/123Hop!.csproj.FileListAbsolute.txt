@@ -1,0 +1,7 @@
+D:\Project\Repos\123Hop!\bin\Debug\123Hop!.exe.config
+D:\Project\Repos\123Hop!\bin\Debug\123Hop!.exe
+D:\Project\Repos\123Hop!\bin\Debug\123Hop!.pdb
+D:\Project\Repos\123Hop!\obj\Debug\123Hop!.csproj.AssemblyReference.cache
+D:\Project\Repos\123Hop!\obj\Debug\123Hop!.csproj.CoreCompileInputs.cache
+D:\Project\Repos\123Hop!\obj\Debug\123Hop!.exe
+D:\Project\Repos\123Hop!\obj\Debug\123Hop!.pdb
